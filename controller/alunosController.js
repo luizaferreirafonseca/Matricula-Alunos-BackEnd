@@ -1,9 +1,14 @@
 import {alunos} from '../model/Alunos.js'
 import { validateBody, validateId } from '../utils/index.js'
+import {series} from '../model/Series.js'
+import { AlunoDto } from '../DTOs/AlunoDto.js'
 
 export class AlunosController {
     static getAlunos(req, res){            //static é pra usar o método da classe sem instanciar a classe 
-        res.status(200).send(alunos)
+       
+        const alunosCompletos = alunos.map(aluno => new AlunoDto(aluno))
+        
+        res.status(200).send(alunosCompletos)
     }
 
 
@@ -17,8 +22,10 @@ export class AlunosController {
         
         const aluno = alunos.find((item) => item.id === id) //o find vai no array de alunos e procurar o item que o id seja igual ao id que veio do parametro(da req) e retornar o item, caso nao encontre, ele retorna null
             
+        const alunoCompleto = new AlunoDto(aluno)
+
         if(!!aluno){  // verifica se achou o aluno com o id passado
-            res.status(200).send(aluno)  
+            res.status(200).send(alunoCompleto)  
         }else{
             res.status(404).send('Esse aluno não existe.')
         }
@@ -37,7 +44,8 @@ export class AlunosController {
 
 
             alunos.push(novoAluno)
-            res.status(200).send(novoAluno)
+            const alunoCompleto = new AlunoDto(novoAluno)
+            res.status(200).send(alunoCompleto)
     
         
     }
@@ -57,7 +65,8 @@ export class AlunosController {
             
         if(alunoIndex !== -1){  
             alunos.splice(alunoIndex, 1)
-            res.status(200).send(alunos)  
+            const alunosCompletos = alunos.map(aluno => new AlunoDto(aluno))
+            res.status(200).send(alunosCompletos)  
         }else{
             res.status(404).send('Esse aluno não existe.')
         }
@@ -79,14 +88,19 @@ export class AlunosController {
         const alunoIndex = alunos.findIndex((item) => item.id === id) 
             
 
-        if(alunoIndex !== 1){  
+        if(alunoIndex !== -1){  
             alunos[alunoIndex] = alunoAtualizado
-            res.status(200).send(alunoAtualizado)  
+            const alunoCompleto = new AlunoDto(alunoAtualizado)
+            res.status(200).send(alunoCompleto)  
         }else{
             res.status(404).send('Esse aluno não existe.')
         }
         
     }
+
+
+   
+
 
 
 }

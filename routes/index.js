@@ -13,6 +13,8 @@ export const routes = (app) => {
 
     app.put('/alunos/:id', AlunosController.update)
 
+    
+
 }
 
 
